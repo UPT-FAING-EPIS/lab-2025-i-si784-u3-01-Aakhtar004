@@ -74,7 +74,7 @@ namespace Bank.Domain.Tests.Features
         public void EntoncesElResultadoDeberiaSer(decimal resultado)
         {
             Assert.IsNotNull(_cuenta);
-            Assert.That(_cuenta.Saldo, Is.EqualTo(resultado));
+            Assert.AreEqual(resultado, _cuenta.Saldo);
         }        
 
         [Then("deberia ser error")]
@@ -86,7 +86,79 @@ namespace Bank.Domain.Tests.Features
         [Then("deberia mostrarse el error: (.*)")]
         public void EntoncesDeberiaMostrarseError(string error)
         {
-            Assert.That(_error, Is.EqualTo(error));
+            Assert.AreEqual(error, _error);
+        }
+
+        [Given("el cliente con nombre nulo")]
+        public void DadoClienteConNombreNulo()
+        {
+            try
+            {
+                Cliente.Registrar(null!);
+            }
+            catch (System.Exception ex)
+            {
+                _es_error = true;
+                _error = ex.Message;
+            }
+        }
+
+        [Given("el cliente con nombre vacio")]
+        public void DadoClienteConNombreVacio()
+        {
+            try
+            {
+                Cliente.Registrar("");
+            }
+            catch (System.Exception ex)
+            {
+                _es_error = true;
+                _error = ex.Message;
+            }
+        }
+
+        [Given("la cuenta con numero nulo")]
+        public void DadoCuentaConNumeroNulo()
+        {
+            try
+            {
+                var cliente = Cliente.Registrar("Juan Perez");
+                CuentaAhorro.Aperturar(null!, cliente, 1);
+            }
+            catch (System.Exception ex)
+            {
+                _es_error = true;
+                _error = ex.Message;
+            }
+        }
+
+        [Given("la cuenta con numero vacio")]
+        public void DadoCuentaConNumeroVacio()
+        {
+            try
+            {
+                var cliente = Cliente.Registrar("Juan Perez");
+                CuentaAhorro.Aperturar("", cliente, 1);
+            }
+            catch (System.Exception ex)
+            {
+                _es_error = true;
+                _error = ex.Message;
+            }
+        }
+
+        [Given("la cuenta con propietario nulo")]
+        public void DadoCuentaConPropietarioNulo()
+        {
+            try
+            {
+                CuentaAhorro.Aperturar("123456", null!, 1);
+            }
+            catch (System.Exception ex)
+            {
+                _es_error = true;
+                _error = ex.Message;
+            }
         }
     }
 }
