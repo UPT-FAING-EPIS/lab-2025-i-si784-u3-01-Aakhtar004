@@ -7,8 +7,8 @@ namespace Bank.Domain.Tests.Features
     public sealed class CuentaAhorroPruebas
     {
         private readonly ScenarioContext _scenarioContext;
-        private CuentaAhorro _cuenta { get; set; }
-        private string _error { get; set; }
+        private CuentaAhorro? _cuenta { get; set; }
+        private string? _error { get; set; }
         private bool _es_error { get; set; } = false;
         
         public CuentaAhorroPruebas(ScenarioContext scenarioContext)
@@ -41,9 +41,11 @@ namespace Bank.Domain.Tests.Features
         [When("deposito (.*)")]
         public void CuandoYoDeposito(decimal monto)
         {
+            _es_error = false;
+            _error = null;
             try
             {
-                _cuenta.Depositar(monto);
+                _cuenta?.Depositar(monto);
             }
             catch (System.Exception ex)
             {
@@ -55,10 +57,11 @@ namespace Bank.Domain.Tests.Features
         [When("retiro (.*)")]
         public void CuandoYoRetiro(decimal monto)
         {
+            _es_error = false;
+            _error = null;
             try
             {
-                _cuenta.Retirar(monto);
-                //_resultado = _cuenta.Saldo;
+                _cuenta?.Retirar(monto);
             }
             catch (System.Exception ex)
             {
@@ -70,7 +73,8 @@ namespace Bank.Domain.Tests.Features
         [Then("el saldo nuevo deberia ser (.*)")]
         public void EntoncesElResultadoDeberiaSer(decimal resultado)
         {
-            Assert.AreEqual(_cuenta.Saldo, resultado);
+            Assert.IsNotNull(_cuenta);
+            Assert.That(_cuenta.Saldo, Is.EqualTo(resultado));
         }        
 
         [Then("deberia ser error")]
@@ -82,7 +86,7 @@ namespace Bank.Domain.Tests.Features
         [Then("deberia mostrarse el error: (.*)")]
         public void EntoncesDeberiaMostrarseError(string error)
         {
-            Assert.AreEqual(_error, error);
+            Assert.That(_error, Is.EqualTo(error));
         }
     }
 }
