@@ -56,12 +56,12 @@ jobs:
         run: dotnet tool install -g SpecFlow.Plus.LivingDoc.CLI
       - name: Generate living doc
         run: livingdoc test-assembly ./Bank.Domain.Tests/bin/Debug/net8.0/Bank.Domain.Tests.dll -t ./Bank.Domain.Tests/bin/Debug/net8.0/TestExecution.json -o ./report/index.html
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: specflow
           path: report
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: bddreporte
